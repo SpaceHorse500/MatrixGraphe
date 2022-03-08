@@ -83,7 +83,7 @@ public class WonderMap {
             temp= this.getPath(source,destination);
             if(!uniquePaths.listPath.contains(temp)){
                 if(repeating(ArcsPath.toPath(temp))){
-                   System.out.println(ArcsPath.toPath(temp));
+                   //System.out.println(ArcsPath.toPath(temp));
                    uniquePaths.listPath.add(temp);
                }
             }

@@ -166,17 +166,17 @@ public class DijkstrasAlgorithm {
                 { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
                 { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
         calculateData(adjacencyMatrix);
-        int startNode = 3;
-        int stopNode = 4;
-        givePathInformation(adjacencyMatrix,startNode,stopNode);
-        System.out.println(giveSRLEA(adjacencyMatrix,"3 1 2 6 4 5"));
+        int startNode = 0;
+        int stopNode = 2;
+        //System.out.println(givePathInformation(adjacencyMatrix,startNode,stopNode));
+        //System.out.println(giveSRLEA(adjacencyMatrix,"0 1 7 6 3 2"));
         WonderMap wm=new WonderMap(adjacencyMatrix);
-        UniquePaths uniquePaths = wm.generateUniquePaths(3, 7, 60);
-        System.out.println(uniquePaths.listPath.get(0));
-        System.out.println(ArcsPath.toPath(uniquePaths.listPath.get(0)));
+        GenerateData generateData= new GenerateData(adjacencyMatrix);
+        generateData.generate();
+        generateData.displayAll();
     }
 
-    private static PileInformation giveSRLEA(int[][] adjacencyMatrix,String strictPath) {
+    public static PileInformation giveSRLEA(int[][] adjacencyMatrix,String strictPath) {
         String[] nodes=strictPath.split(" ");
         int pathSize = nodes.length;
         int firstNode = Integer.parseInt(nodes[0]);
@@ -184,12 +184,14 @@ public class DijkstrasAlgorithm {
         PileInformation pi= new PileInformation();
         List<Integer> shortestPath = givePathInformation(adjacencyMatrix,firstNode,lastNode).getPath();
         int bias=0;
-        int taillePile=0;
         String label;
         for(int i = 1 ; i < pathSize ; i++){
+            System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
             if(Integer.parseInt(nodes[i])!=shortestPath.get(i-bias)){
                 label="adjSID("+Integer.parseInt(nodes[i-1])+","+Integer.parseInt(nodes[i])+")";
                 shortestPath = givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
+                System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
                 pi.addLabel(label);
                 bias=i;
             }else{
@@ -221,10 +223,10 @@ public class DijkstrasAlgorithm {
         return pi;
     }
 
-    private static PathInformation givePathInformation(int[][] adjacencyMatrix,int startNode, int stopNode) {
-        int nVertices = adjacencyMatrix[0].length -1;
-        //System.out.println(pathInformations.get(nVertices*startNode+stopNode-1));
-        return pathInformations.get(nVertices*startNode+stopNode-1);
+    public static PathInformation givePathInformation(int[][] adjacencyMatrix,int startNode, int stopNode) {
+        int nVertices = adjacencyMatrix[0].length;
+        System.out.println(pathInformations.get(nVertices*startNode+stopNode));
+        return pathInformations.get(nVertices*startNode+stopNode);
     }
 
     private static void calculateData(int[][] adjacencyMatrix) {
