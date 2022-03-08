@@ -13,12 +13,14 @@ public class GenerateData {
 
     public void generate(){
         WonderMap wm=new WonderMap(adjacencyMatrix);
-        for(int i =0 ; i < this.nVerticies ; i++){
-            for(int j =0 ; j < this.nVerticies ; j++){
-                UniquePaths uniquePaths = wm.generateUniquePaths(i, j, 100);
-                DataTable dt=new DataTable(this.adjacencyMatrix);
-                dt.addPath(uniquePaths);
-                dataTables.add(dt);
+        for(int i = 0 ; i < this.nVerticies ; i++){
+            for(int j = 0 ; j < this.nVerticies ; j++){
+                if(i!=j) {
+                    UniquePaths uniquePaths = wm.generateUniquePaths(i, j, 100);
+                    DataTable dt = new DataTable(this.adjacencyMatrix);
+                    dt.addPath(uniquePaths);
+                    dataTables.add(dt);
+                }
             }
         }
     }
@@ -27,18 +29,20 @@ public class GenerateData {
         return this.dataTables.get(this.nVerticies*x+y);
     }
 
+    public DataTable getDataTable(int value){
+        return this.dataTables.get(value);
+    }
+
     public void displayAll() {
-        for(int i=0 ; i< this.nVerticies ; i++){
-            for(int j=0 ; j< this.nVerticies ; j++){
-                int size=this.getDataTable(i,j).uniquePaths.listPath.size();
-                for(int k=0 ; k < size-1 ; k++){
-                    System.out.println(this.getDataTable(i,j).uniquePaths.listPath.get(k));
-                    System.out.println("Strict Path : "+this.getDataTable(i,j).getStrictPath(k));
-                    System.out.println("SR LEA : "+this.getDataTable(i,j).getSRLEAPath(k));
-                    System.out.println("Disjtra Path : "+DijkstrasAlgorithm.givePathInformation(adjacencyMatrix,i,j).path);
-                    System.out.println("---------------------------------");
-                }
+        for(int value=0 ; value< this.dataTables.size() ; value++){
+            int size=this.dataTables.get(value).uniquePaths.listPath.size();
+            for(int i = 0 ; i < size ; i++){
+                System.out.println(DijkstrasAlgorithm.givePathInformation(adjacencyMatrix,value).path);
+                System.out.println(this.dataTables.get(value).getStrictPath(i));
+                System.out.println(this.dataTables.get(value).getSRLEAPath(i));
+                System.out.println(this.dataTables.get(value).getSRLEAAPath(i));
             }
         }
     }
+
 }

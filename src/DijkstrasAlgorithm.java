@@ -182,16 +182,17 @@ public class DijkstrasAlgorithm {
         int firstNode = Integer.parseInt(nodes[0]);
         int lastNode = Integer.parseInt(nodes[pathSize-1]);
         PileInformation pi= new PileInformation();
-        List<Integer> shortestPath = givePathInformation(adjacencyMatrix,firstNode,lastNode).getPath();
+        List<Integer> shortestPath = givePathInformationTranslated(adjacencyMatrix,firstNode,lastNode).getPath();
         int bias=0;
         String label;
-        for(int i = 1 ; i < pathSize ; i++){
-            System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
+        for(int i = 1 ; i < pathSize - 1 ; i++){
+            //System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
             if(Integer.parseInt(nodes[i])!=shortestPath.get(i-bias)){
                 label="adjSID("+Integer.parseInt(nodes[i-1])+","+Integer.parseInt(nodes[i])+")";
-                shortestPath = givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
-                System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
-                System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
+                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
+                shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
+                //System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
                 pi.addLabel(label);
                 bias=i;
             }else{
@@ -202,20 +203,27 @@ public class DijkstrasAlgorithm {
         return pi;
     }
 
-    private static PileInformation giveSRLEA_A(int[][] adjacencyMatrix,String strictPath) {
+    private  static PathInformation givePathInformationTranslated(int[][] adjacencyMatrix, int firstNode, int lastNode) {
+        return pathInformations.get(translator(adjacencyMatrix,firstNode,lastNode));
+    }
+
+    public static PileInformation giveSRLEAA(int[][] adjacencyMatrix,String strictPath) {
         String[] nodes=strictPath.split(" ");
         int pathSize = nodes.length;
         int firstNode = Integer.parseInt(nodes[0]);
         int lastNode = Integer.parseInt(nodes[pathSize-1]);
         PileInformation pi= new PileInformation();
-        List<Integer> shortestPath = givePathInformation(adjacencyMatrix,firstNode,lastNode).getPath();
+        List<Integer> shortestPath = givePathInformationTranslated(adjacencyMatrix,firstNode,lastNode).getPath();
         int bias=0;
-        int taillePile=0;
         String label;
-        for(int i = 1 ; i < pathSize ; i++){
+        for(int i = 1 ; i < pathSize - 1 ; i++){
+            //System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
             if(Integer.parseInt(nodes[i])!=shortestPath.get(i-bias)){
                 label="adjSID("+Integer.parseInt(nodes[i-1])+","+Integer.parseInt(nodes[i])+")";
-                shortestPath = givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
+                shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
+                //System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
                 pi.addLabel(label);
                 bias=i;
             }
@@ -223,10 +231,10 @@ public class DijkstrasAlgorithm {
         return pi;
     }
 
-    public static PathInformation givePathInformation(int[][] adjacencyMatrix,int startNode, int stopNode) {
-        int nVertices = adjacencyMatrix[0].length;
-        System.out.println(pathInformations.get(nVertices*startNode+stopNode));
-        return pathInformations.get(nVertices*startNode+stopNode);
+
+    public static PathInformation givePathInformationTranslated(int[][] adjacencyMatrix,int value) {
+        System.out.println(value+" -> "+translator(adjacencyMatrix,value));
+        return pathInformations.get(translator(adjacencyMatrix,value));
     }
 
     private static void calculateData(int[][] adjacencyMatrix) {
@@ -236,4 +244,18 @@ public class DijkstrasAlgorithm {
         }
     }
 
+    private static int translator(int[][] adjacencyMatrix,int x,int y) {
+        int size=adjacencyMatrix[0].length;
+        Assosiation assosiation=new Assosiation(adjacencyMatrix);
+        return assosiation.translate.get(size*x+y);
+    }
+
+    private static int translator(int[][] adjacencyMatrix,int value) {
+        Assosiation assosiation=new Assosiation(adjacencyMatrix);
+        return assosiation.translate.get(value);
+    }
+
+    public static PathInformation givePathInformation(int[][] adjacencyMatrix, int value) {
+        return pathInformations.get(value);
+    }
 }

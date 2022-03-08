@@ -22,5 +22,17 @@ public class DataTable {
         return DijkstrasAlgorithm.giveSRLEA(matrix,this.getStrictPath(index)).toString();
     }
 
+    public String getSRLEAAPath(int index){
+        return DijkstrasAlgorithm.giveSRLEAA(matrix,this.getStrictPath(index)).toString();
+    }
+
+    public int getSRLEAAPathLen(int index){
+        return DijkstrasAlgorithm.giveSRLEAA(matrix,this.getStrictPath(index)).getSids().size();
+    }
+
+    public int getSRLEAPathLen(int index){
+        return DijkstrasAlgorithm.giveSRLEA(matrix,this.getStrictPath(index)).getSids().size();
+    }
+
 
 }
