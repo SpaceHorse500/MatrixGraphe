@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GenerateData {
     private int[][] adjacencyMatrix;
@@ -16,7 +17,7 @@ public class GenerateData {
         for(int i = 0 ; i < this.nVerticies ; i++){
             for(int j = 0 ; j < this.nVerticies ; j++){
                 if(i!=j) {
-                    UniquePaths uniquePaths = wm.generateUniquePaths(i, j, 100);
+                    UniquePaths uniquePaths = wm.generateUniquePaths(i, j, 90000);
                     DataTable dt = new DataTable(this.adjacencyMatrix);
                     dt.addPath(uniquePaths);
                     dataTables.add(dt);
@@ -36,11 +37,17 @@ public class GenerateData {
     public void displayAll() {
         for(int value=0 ; value< this.dataTables.size() ; value++){
             int size=this.dataTables.get(value).uniquePaths.listPath.size();
-            for(int i = 0 ; i < size ; i++){
-                System.out.println(DijkstrasAlgorithm.givePathInformation(adjacencyMatrix,value).path);
-                System.out.println(this.dataTables.get(value).getStrictPath(i));
-                System.out.println(this.dataTables.get(value).getSRLEAPath(i));
-                System.out.println(this.dataTables.get(value).getSRLEAAPath(i));
+            for(int i = 1 ; i < size ; i++){
+                String[] vals=this.dataTables.get(value).getStrictPath(i).split(" ");
+                System.out.print(DijkstrasAlgorithm.givePathInformation(adjacencyMatrix,value).path+";");
+                System.out.print(Arrays.toString(vals)+";");
+                System.out.print(vals.length+";");
+                System.out.print(this.dataTables.get(value).getSRLEAPath(i)+";");
+                System.out.print(this.dataTables.get(value).getSRLEAPathLen(i)+";");
+                System.out.print(this.dataTables.get(value).getSRLEAAPath(i)+";");
+                System.out.print(this.dataTables.get(value).getSRLEAAPathLen(i)+";");
+                System.out.print("\n");
+
             }
         }
     }

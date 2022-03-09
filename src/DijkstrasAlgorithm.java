@@ -156,15 +156,19 @@ public class DijkstrasAlgorithm {
     // Driver Code
     public static void main(String[] args)
     {
-        int[][] adjacencyMatrix = { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
-                { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
-                { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
-                { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
-                { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
-                { 0, 0, 4, 0, 10, 0, 2, 0, 0 },
-                { 0, 0, 0, 14, 0, 2, 0, 1, 6 },
-                { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
-                { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+        int[][] adjacencyMatrix = {{0,    500,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0},
+                {500,    0,    0,    0,    1176,    587,    0,    0,    0,    0,    0,    846},
+                {0,    0,    0,    0,    0,    260,    0,    0,    700,    0,    0,    0},
+                {0,    0,    0,    0,    902,    548,    639,    0,    0,    0,    0,    0},
+                {0,    1176,    0,    902,    0,    0,    0,    1893,    0,    0,    0,    0},
+                {0,    587,    260,    548,    0,    0,    0,    0,    0,    0,    0,    0},
+                {0,    0,    0,    639,    0,    0,    0,    0,    0,    1295,    2095,    0},
+                {0,    0,    0,    0,    1893,    0,    0,    0,    0,    366,    0,    0},
+                {0,    0,    700,    0,    0,    0,    0,    0,    0,    0,    0,    233},
+                {0,    0,    0,    0,    0,    0,    1295,    366,    0,    0,    856,    0},
+                {0,    0,    0,    0,    0,    0,    2095,    0,    0,    856,    0,    0},
+                {0,    846,    0,    0,    0,    0,    0,    0,    233,    0,    0,    0}};
+        ;
         calculateData(adjacencyMatrix);
         int startNode = 0;
         int stopNode = 2;
@@ -183,23 +187,45 @@ public class DijkstrasAlgorithm {
         int lastNode = Integer.parseInt(nodes[pathSize-1]);
         PileInformation pi= new PileInformation();
         List<Integer> shortestPath = givePathInformationTranslated(adjacencyMatrix,firstNode,lastNode).getPath();
+        //System.out.println(shortestPath.toString());
         int bias=0;
+        boolean adjBool=false;
         String label;
-        for(int i = 1 ; i < pathSize - 1 ; i++){
-            //System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
-            if(Integer.parseInt(nodes[i])!=shortestPath.get(i-bias)){
-                label="adjSID("+Integer.parseInt(nodes[i-1])+","+Integer.parseInt(nodes[i])+")";
-                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
-                shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
-                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
-                //System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
-                pi.addLabel(label);
-                bias=i;
+        for(int i = 0 ; i < pathSize - 1 ; i++){
+            //Compare if shortest path is equal to Strict Path
+            //System.out.println(Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
+            //System.out.println("Unmodified "+shortestPath.toString());
+            if(!adjBool) {
+                if (Integer.parseInt(nodes[i]) != shortestPath.get(bias)) {
+                    //System.out.println("NOT EQUAL TREATMENT");
+                    label = "node-SID(" + Integer.parseInt(nodes[i - 1]) + ")";
+                    pi.addLabel(label);
+                    firstNode=Integer.parseInt(nodes[i]);
+                    //System.out.println("FIRST NODE IS "+firstNode);
+                    shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                    //System.out.println("SHORTEST PATH IS "+shortestPath.toString());
+                    adjBool = true;
+                    bias=0;
+                }
+                bias++;
             }else{
-                label="node-SID("+Integer.parseInt(nodes[i])+")";
-                pi.addLabel(label);
+                if(Integer.parseInt(nodes[i]) != shortestPath.get(bias)){
+                    //System.out.println("COMPARED VALUES "+Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
+                    label="adjSID("+firstNode+","+Integer.parseInt(nodes[i])+")";
+                    //System.out.println("ADDING AdjSID ("+firstNode+","+lastNode+")");
+                    pi.addLabel(label);
+                    firstNode=Integer.parseInt(nodes[i]);
+                    //System.out.println("FIRST NODE IS "+firstNode);
+                    shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                    //System.out.println("SHORTEST PATH IS "+shortestPath.toString());
+                    adjBool=false;
+                    bias=0;
+                }
+                bias++;
             }
         }
+        label="node-SID("+Integer.parseInt(nodes[nodes.length-1])+")";
+        pi.addLabel(label);
         return pi;
     }
 
@@ -214,20 +240,43 @@ public class DijkstrasAlgorithm {
         int lastNode = Integer.parseInt(nodes[pathSize-1]);
         PileInformation pi= new PileInformation();
         List<Integer> shortestPath = givePathInformationTranslated(adjacencyMatrix,firstNode,lastNode).getPath();
+        //System.out.println(shortestPath.toString());
         int bias=0;
+        boolean adjBool=false;
         String label;
-        for(int i = 1 ; i < pathSize - 1 ; i++){
-            //System.out.println("Testing "+(i-bias)+" Index "+i+" Bias "+bias+" Size "+shortestPath.size());
-            if(Integer.parseInt(nodes[i])!=shortestPath.get(i-bias)){
-                label="adjSID("+Integer.parseInt(nodes[i-1])+","+Integer.parseInt(nodes[i])+")";
-                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
-                shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
-                //System.out.println("From "+nodes[i]+" to "+lastNode+" "+shortestPath);
-                //System.out.println("From "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).firstNode+" to "+givePathInformation(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).lastNode+" "+shortestPath);
-                pi.addLabel(label);
-                bias=i;
+        for(int i = 0 ; i < pathSize - 1 ; i++){
+            //Compare if shortest path is equal to Strict Path
+            //System.out.println(Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
+            //System.out.println("Unmodified "+shortestPath.toString());
+            if(!adjBool) {
+                if (Integer.parseInt(nodes[i]) != shortestPath.get(bias)) {
+                    //System.out.println("NOT EQUAL TREATMENT");
+                    firstNode=Integer.parseInt(nodes[i]);
+                    //System.out.println("FIRST NODE IS "+firstNode);
+                    shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                    //System.out.println("SHORTEST PATH IS "+shortestPath.toString());
+                    adjBool = true;
+                    bias=0;
+                }
+                bias++;
+            }else{
+                if(Integer.parseInt(nodes[i]) != shortestPath.get(bias)){
+                    //System.out.println("COMPARED VALUES "+Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
+                    label="adjSID("+firstNode+","+Integer.parseInt(nodes[i])+")";
+                    //System.out.println("ADDING AdjSID ("+firstNode+","+lastNode+")");
+                    pi.addLabel(label);
+                    firstNode=Integer.parseInt(nodes[i]);
+                    //System.out.println("FIRST NODE IS "+firstNode);
+                    shortestPath = givePathInformationTranslated(adjacencyMatrix,Integer.parseInt(nodes[i]),lastNode).getPath();
+                    //System.out.println("SHORTEST PATH IS "+shortestPath.toString());
+                    adjBool=false;
+                    bias=0;
+                }
+                bias++;
             }
         }
+        label="node-SID("+Integer.parseInt(nodes[nodes.length-1])+")";
+        pi.addLabel(label);
         return pi;
     }
 
