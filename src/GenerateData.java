@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GenerateData {
+
+    public static int ATTEMPT = 10000;
     private int[][] adjacencyMatrix;
     private int nVerticies;
     private ArrayList<DataTable> dataTables;
@@ -17,10 +19,12 @@ public class GenerateData {
         for(int i = 0 ; i < this.nVerticies ; i++){
             for(int j = 0 ; j < this.nVerticies ; j++){
                 if(i!=j) {
-                    UniquePaths uniquePaths = wm.generateUniquePaths(i, j, 90000);
+                    System.out.print("Creation route : "+i+" : "+j);
+                    UniquePaths uniquePaths = wm.generateUniquePaths(i, j, ATTEMPT);
                     DataTable dt = new DataTable(this.adjacencyMatrix);
                     dt.addPath(uniquePaths);
                     dataTables.add(dt);
+                    System.out.print("  ==> "+dt.uniquePaths.listPath.size()+" routes added.\n");
                 }
             }
         }

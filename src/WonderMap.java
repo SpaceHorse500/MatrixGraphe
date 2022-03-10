@@ -92,20 +92,12 @@ public class WonderMap {
     }
 
     public static boolean repeating(String word) {
-        Set<Character> repeating = new HashSet<>();
-        List<Character> nonRepeating = new ArrayList<>();
-        for (int i = 0; i < word.length(); i++) {
-            char letter = word.charAt(i);
-            if (repeating.contains(letter)) {
-                continue; }
-            if (nonRepeating.contains(letter)) {
-                nonRepeating.remove((Character) letter);
-                repeating.add(letter);
-            } else {
-                nonRepeating.add(letter);
-            }
+        String[] vars= word.split(" ");
+        Set <Integer> unique = new HashSet<Integer>();
+        for(String var : vars ){
+            unique.add(Integer.valueOf(var));
         }
-        return nonRepeating.size()==word.split(" ").length;
+        return vars.length==unique.size();
     }
 
 }

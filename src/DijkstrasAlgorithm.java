@@ -170,10 +170,6 @@ public class DijkstrasAlgorithm {
                 {0,    846,    0,    0,    0,    0,    0,    0,    233,    0,    0,    0}};
         ;
         calculateData(adjacencyMatrix);
-        int startNode = 0;
-        int stopNode = 2;
-        //System.out.println(givePathInformation(adjacencyMatrix,startNode,stopNode));
-        //System.out.println(giveSRLEA(adjacencyMatrix,"0 1 7 6 3 2"));
         WonderMap wm=new WonderMap(adjacencyMatrix);
         GenerateData generateData= new GenerateData(adjacencyMatrix);
         generateData.generate();
@@ -260,7 +256,6 @@ public class DijkstrasAlgorithm {
                 }
                 bias++;
             }else{
-                if(Integer.parseInt(nodes[i]) != shortestPath.get(bias)){
                     //System.out.println("COMPARED VALUES "+Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
                     label="adjSID("+firstNode+","+Integer.parseInt(nodes[i])+")";
                     //System.out.println("ADDING AdjSID ("+firstNode+","+lastNode+")");
@@ -271,7 +266,6 @@ public class DijkstrasAlgorithm {
                     //System.out.println("SHORTEST PATH IS "+shortestPath.toString());
                     adjBool=false;
                     bias=0;
-                }
                 bias++;
             }
         }

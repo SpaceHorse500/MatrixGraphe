@@ -1,6 +1,7 @@
 import java.util.HashMap;
 
 public class Assosiation {
+
     public HashMap<Integer,Integer> translate;
 
     public Assosiation(int[][] matrix){
