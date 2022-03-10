@@ -191,6 +191,7 @@ public class DijkstrasAlgorithm {
             //Compare if shortest path is equal to Strict Path
             //System.out.println(Integer.parseInt(nodes[i])+" __ "+shortestPath.get(bias));
             //System.out.println("Unmodified "+shortestPath.toString());
+
             if(!adjBool) {
                 if (Integer.parseInt(nodes[i]) != shortestPath.get(bias)) {
                     //System.out.println("NOT EQUAL TREATMENT");
